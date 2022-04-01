@@ -1,6 +1,12 @@
-const id = Math.random();
+import { ColumnProps } from "antd/es/table";
 
-export const columns = [
+interface User {
+  key: number;
+  name: string;
+  getColumnSearchProps: (dataIndex: string) => ColumnProps<User>;
+}
+
+export const columns: ColumnProps<User>[] = [
   {
     title: "Nome",
     dataIndex: "name",

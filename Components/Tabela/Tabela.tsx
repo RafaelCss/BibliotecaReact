@@ -1,56 +1,52 @@
-import { useState, useEffect } from "react";
 import { Table, Button, Space, Input, Checkbox } from "antd";
 import { source } from "./dados/dados";
 import { SearchOutlined } from "@ant-design/icons";
+import { ColumnProps } from "antd/es/table";
 
 interface IPadrao {
-  searchText: string;
-  filtered: string;
-  setSelectedKeys?: ([]) => string[] | boolean;
-  selectedKeys: string[];
-  confirm: () => string;
-  clearFilters: () => string;
+  searchText: () => any;
+  filtered: any;
+  selectedKeys?: string[];
+  confirm: () => any;
+  clearFilters: () => any;
+  setSelectedKeys?: any;
 }
+
 export default function Tabela() {
-  function handleSearch(confirm: any) {
-    console.log("confirm", confirm);
+  function handleSearch(confirm: () => any): any {
+    console.log("confirm");
     confirm();
   }
 
-  function handleReset(clearFilters: any) {
+  function handleReset(clearFilters: any): any {
     clearFilters();
   }
-
-  const [checkbox, Setcheckbox] = useState("false");
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: IPadrao) => (
       <div style={{ padding: 8 }}>
         {dataIndex == "ingles" ? (
-          <Space>
-            <Checkbox.Group>
-              <Checkbox checked={true} value={"Ativo"} onChange={(e) => setSelectedKeys("true" ? ["true"] : [])}>
-                Ativo
-              </Checkbox>
-
-              <Checkbox checked={true} value={"Inativo"} onChange={(e) => setSelectedKeys("false" ? ["false"] : [])}>
-                Inativo
-              </Checkbox>
-
+          <Checkbox.Group>
+            <Checkbox checked={true} value={"Ativo"} onChange={(e) => setSelectedKeys("true" ? ["true"] : [])}>
+              Ativo
+            </Checkbox>
+            <Checkbox checked={true} value={"Inativo"} onChange={(e) => setSelectedKeys("false" ? ["false"] : [])}>
+              Inativo
+            </Checkbox>
+            <Space>
               <Button type='primary' onClick={() => handleSearch(confirm)} icon={<SearchOutlined />} size='small' style={{ width: 90 }}>
                 Buscar
               </Button>
-
-              <Button onClick={(e) => handleReset(clearFilters)} size='small' style={{ width: 90 }}>
+              <Button onClick={() => handleReset(clearFilters)} size='small' style={{ width: 90 }}>
                 Limpar
               </Button>
-            </Checkbox.Group>
-          </Space>
+            </Space>
+          </Checkbox.Group>
         ) : (
           <>
-            <Input placeholder={`Buscar ${dataIndex}`} value={selectedKeys[0]} onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])} onPressEnter={() => handleSearch(confirm)} style={{ width: 188, marginBottom: 8, display: "block" }} />
+            <Input placeholder={`Buscar ${dataIndex}`} value={selectedKeys} onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])} onPressEnter={() => handleSearch(confirm)} style={{ width: 188, marginBottom: 8, display: "block" }} />
             <Space>
-              <Button type='primary' onClick={() => handleSearch(confirm)} icon={<SearchOutlined />} size='small' style={{ width: 90 }}>
+              <Button type='primary' onClick={(e) => handleSearch(confirm)} icon={<SearchOutlined />} size='small' style={{ width: 90 }}>
                 Buscar
               </Button>
               <Button onClick={(e) => handleReset(clearFilters)} size='small' style={{ width: 90 }}>
@@ -61,38 +57,41 @@ export default function Tabela() {
         )}
       </div>
     ),
-    filterIcon: (filtered: string) => <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />,
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />,
     onFilter: (value: any, record: any) => record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase()),
-
-    /* onFilterDropdownVisibleChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.select(100));
-      }
-    }, */
   });
 
   const id = Math.random();
+  interface User {
+    key?: number;
+    name: string;
+    age: string;
+    ingles: boolean;
+  }
 
-  const columns = [
+  const columns: ColumnProps<User>[] = [
     {
       title: "Nome",
       dataIndex: "name",
       key: "name",
-      width: "30%",
+      align: "center",
+      width: "10%",
       ...getColumnSearchProps("name"),
     },
     {
       title: "Idade",
+      align: "center",
       dataIndex: "age",
       key: "age",
-      width: "30%",
+      width: "10%",
       ...getColumnSearchProps("age"),
     },
     {
       title: "Status",
       dataIndex: "ingles",
       key: "ingles",
-      width: "30%",
+      width: "10%",
+      align: "center",
       render: (value: boolean) => {
         if (value === true) {
           return "Ativo";

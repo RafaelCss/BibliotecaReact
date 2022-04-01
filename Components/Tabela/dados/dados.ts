@@ -1,4 +1,11 @@
-export const source = [
+interface User {
+  key?: number;
+  name: string;
+  age: string;
+  ingles: boolean;
+}
+
+export const source: User[] = [
   {
     name: "Rafael carlos",
     age: "31",
