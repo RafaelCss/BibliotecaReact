@@ -5,7 +5,7 @@ import { InputDinheiro } from "../../Components/InputMaskMoeda/index";
 export default function InputMoney(): ReactElement {
   return (
     <div>
-      <InputDinheiro />
+      <InputDinheiro onChange={(e)=> console.log(e)}/>
       <ConsumoApi />
     </div>
   );
